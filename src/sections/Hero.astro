@@ -1,0 +1,196 @@
+---
+/**
+ * Первый экран: зал под кольцевым светильником. Сигнатура «кольцо света» — DESIGN.md С1.
+ * Фото и SVG-кольцо лежат в одной cover-коробке с пропорциями кадра, поэтому эллипс совпадает со светильником на любой ширине.
+ * Телефон — кадр 07 (вертикальный), ≥768 — кадр 03 (горизонтальный, укрупнён ×1.12).
+ */
+import { getImage } from 'astro:assets';
+import photoM from '../assets/photos/photo-vsemeda-07.jpg';
+import photoD from '../assets/photos/photo-vsemeda-03.jpg';
+import logo from '../assets/brand/logo.jpg';
+import { business, bookingUrl } from '../data/site';
+
+const mq = '(max-width: 767px)';
+const [mAvif, mWebp, dAvif, dWebp, fallback, logoImg] = await Promise.all([
+  getImage({ src: photoM, widths: [480, 720, 960, 1333], format: 'avif' }),
+  getImage({ src: photoM, widths: [480, 720, 960, 1333], format: 'webp' }),
+  getImage({ src: photoD, widths: [960, 1280, 1500], format: 'avif' }),
+  getImage({ src: photoD, widths: [960, 1280, 1500], format: 'webp' }),
+  getImage({ src: photoD, width: 1500, format: 'jpg' }),
+  getImage({ src: logo, width: 96, format: 'webp' }),
+]);
+const [yandex, twoGis] = business.ratings;
+---
+<section data-section="hero" id="hero" aria-labelledby="hero-title" class="hero">
+  <div class="stage" aria-hidden="true">
+    <div class="cover">
+      <picture>
+        <source media={mq} type="image/avif" srcset={mAvif.srcSet.attribute} sizes="150vw" />
+        <source media={mq} type="image/webp" srcset={mWebp.srcSet.attribute} sizes="150vw" />
+        <source type="image/avif" srcset={dAvif.srcSet.attribute} sizes="112vw" />
+        <source type="image/webp" srcset={dWebp.srcSet.attribute} sizes="112vw" />
+        <img src={fallback.src} width="1500" height="1000" alt="" loading="eager" fetchpriority="high" decoding="async" />
+      </picture>
+      <svg class="ring ring--m" viewBox="0 0 1333 2000" preserveAspectRatio="none" focusable="false">
+        <defs><filter id="ring-blur-m" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="16" /></filter></defs>
+        <ellipse class="ring-glow" cx="820" cy="281" rx="360" ry="151" stroke-width="18" filter="url(#ring-blur-m)" />
+        <ellipse class="ring-line" pathLength="1" cx="820" cy="281" rx="360" ry="151" stroke-width="5" />
+      </svg>
+      <svg class="ring ring--d" viewBox="0 0 1500 1000" preserveAspectRatio="none" focusable="false">
+        <defs><filter id="ring-blur-d" x="-20%" y="-100%" width="140%" height="300%"><feGaussianBlur stdDeviation="12" /></filter></defs>
+        <ellipse class="ring-glow" cx="836" cy="178" rx="129" ry="37" stroke-width="14" filter="url(#ring-blur-d)" />
+        <ellipse class="ring-line" pathLength="1" cx="836" cy="178" rx="129" ry="37" stroke-width="4" />
+      </svg>
+    </div>
+    <div class="dusk"></div>
+    <div class="shade"></div>
+  </div>
+
+  <header class="top container-x">
+    <a class="logo" href="#hero" aria-label={`${business.name} — в начало`}>
+      <img src={logoImg.src} width="44" height="44" alt="" />
+    </a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#atmosphere">Зал</a>
+      <a href="#kitchen">Кухня</a>
+      <a href="#ratings">Рейтинги</a>
+      <a href="#visit">Как найти</a>
+    </nav>
+    <a class="top-tel" href={`tel:${business.phone.e164}`} aria-label={`Позвонить: ${business.phone.display}`}>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z" /></svg>
+      <span>{business.phone.display}</span>
+    </a>
+  </header>
+
+  <div class="copy container-x">
+    <div class="info">
+      <p class="lead">Кальян-бар, бар и&nbsp;ресторан на&nbsp;Приморском</p>
+      <a class="cta" id="hero-cta" href={bookingUrl} target="_blank" rel="noopener" aria-label="Забронировать стол в WhatsApp">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7a11 11 0 0 1-4.7-4.1 5.3 5.3 0 0 1-1.1-2.8c0-1.3.7-1.9.9-2.2.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.2-.3.3-.1.6a7 7 0 0 0 3.3 2.9c.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.2.5.2.5.4.1.2.1.8-.2 1.4z" /></svg>
+        Забронировать стол
+      </a>
+      <div class="row">
+        <span class="hours">{business.hoursDisplay}</span>
+        <a class="tel" href={`tel:${business.phone.e164}`}>{business.phone.display}</a>
+      </div>
+      <div class="row rates">
+        <span class="sr-only">Оценки на картах:</span>
+        <a href={yandex.url} target="_blank" rel="noopener"><b>{yandex.value}</b> {yandex.source}</a>
+        <a href={twoGis.url} target="_blank" rel="noopener"><b>{twoGis.value}</b> {twoGis.source}</a>
+      </div>
+      <div class="row foot">
+        <p class="addr">Приморский пр., 137, корп.&nbsp;1В, 2&nbsp;этаж</p>
+        <p class="credit">Фото: SVH</p>
+      </div>
+    </div>
+    <h1 id="hero-title" class="mark"><span class="mark-a">хука</span> <span class="mark-b">Lounge</span></h1>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; min-height: max(100svh, 37.5rem); overflow: hidden; isolation: isolate; display: flex; flex-direction: column; }
+
+  /* ---- кадр ---- */
+  .stage { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+  .cover {
+    --ar: 1.5; --k: 1.12; --px: 0.85; --py: 0;
+    --vh: max(100svh, 37.5rem);
+    --W: calc(max(100vw, var(--vh) * var(--ar)) * var(--k));
+    --H: calc(var(--W) / var(--ar));
+    position: absolute; width: var(--W); height: var(--H);
+    left: calc((100vw - var(--W)) * var(--px));
+    top: calc((var(--vh) - var(--H)) * var(--py));
+  }
+  .cover picture, .cover img, .ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cover img { object-fit: cover; max-width: none; }
+  .ring--m { display: none; }
+  .ring { fill: none; overflow: visible; }
+  .ring ellipse { fill: none; stroke: var(--c-secondary); stroke-linecap: round; }
+  .ring .ring-glow { stroke: var(--c-glow); animation: ring-glow var(--d-glow) var(--e-out) var(--d-glow-delay) both; }
+  .ring .ring-line { stroke-dasharray: 1; animation: ring-draw var(--d-enter) var(--e-draw) both; }
+  .dusk { position: absolute; inset: 0; background: rgb(var(--c-scrim) / var(--dusk-alpha)); animation: dusk-out var(--d-enter) var(--e-out) 100ms both; }
+  .shade {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgb(var(--c-scrim) / 0.7) 0, rgb(var(--c-scrim) / 0) 16%),
+      linear-gradient(to top, var(--c-bg) 0, rgb(var(--c-scrim) / 0.88) 22%, rgb(var(--c-scrim) / 0.55) 46%, rgb(var(--c-scrim) / 0) 70%);
+  }
+  @keyframes ring-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes ring-glow { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes dusk-out { from { opacity: 1; } to { opacity: 0; } }
+
+  /* ---- шапка ---- */
+  .top { display: flex; align-items: center; gap: var(--s-8); min-height: var(--header-h); }
+  .logo { flex: none; width: 44px; height: 44px; border-radius: 50%; overflow: hidden; border: 1.5px solid rgb(242 233 214 / 0.7); }
+  .logo img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); }
+  .nav { display: none; gap: var(--s-8); }
+  .nav a, .top-tel {
+    min-height: var(--tap); display: inline-flex; align-items: center; gap: var(--s-2);
+    font-weight: 500; text-decoration: none; text-shadow: 0 1px 8px rgb(var(--c-scrim) / 0.8);
+  }
+  .nav a:hover, .top-tel:hover { color: var(--c-accent-text); }
+  .top-tel { margin-left: auto; min-width: var(--tap); justify-content: center; font-variant-numeric: tabular-nums; }
+  .top-tel span { display: none; }
+
+  /* ---- текст ---- */
+  .copy { margin-top: auto; display: flex; flex-direction: column-reverse; gap: var(--s-4); padding-bottom: var(--s-6); }
+  .mark { font-family: var(--f-display); font-weight: 400; line-height: var(--t-hero-lh); letter-spacing: var(--t-hero-ls); text-shadow: 0 2px 30px rgb(var(--c-scrim) / 0.6); }
+  .mark-a { display: block; font-size: var(--t-hero); text-transform: lowercase; padding-bottom: 0.2em; }
+  .mark-b { display: block; font-family: var(--f-body); font-weight: 500; font-size: var(--t-hero-sub); letter-spacing: var(--t-hero-sub-ls); text-transform: uppercase; line-height: 1; }
+  .info { display: flex; flex-direction: column; }
+  .lead { font-size: var(--t-lead); line-height: 1.35; max-width: 22em; }
+  .cta {
+    margin-top: var(--s-4); display: flex; align-items: center; justify-content: center; gap: var(--s-2);
+    min-height: var(--cta-h); padding: 0 var(--s-6); border-radius: var(--r-pill);
+    background: var(--c-accent); color: var(--c-on-accent); font-weight: 500; font-size: 1.125rem; text-decoration: none;
+    transition: background-color var(--d-micro) var(--e-out), transform var(--d-micro) var(--e-out);
+  }
+  .cta:hover { background: var(--c-accent-hover); }
+  .cta:active { transform: scale(0.98); }
+  .cta:focus-visible { outline: 2px solid var(--c-accent-text); outline-offset: 3px; }
+  .row { display: flex; align-items: center; justify-content: space-between; column-gap: var(--s-2); flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+  .hours { color: var(--c-secondary); font-weight: 500; min-height: var(--tap); display: inline-flex; align-items: center; }
+  .tel { min-height: var(--tap); display: inline-flex; align-items: center; font-weight: 500; text-decoration: none; }
+  .tel:hover { color: var(--c-accent-text); }
+  .rates { justify-content: flex-start; gap: var(--s-6); }
+  .rates a { min-height: var(--tap); display: inline-flex; align-items: center; gap: var(--s-2); color: var(--c-muted); text-decoration: none; }
+  .rates a:hover { color: var(--c-text); }
+  .rates b { color: var(--c-text); font-weight: 500; }
+  .foot { align-items: baseline; }
+  .addr, .credit { color: var(--c-muted); font-size: var(--t-small); line-height: 1.45; }
+  .credit { margin-left: auto; }
+
+  @media (max-width: 767px) {
+    .cover { --ar: 0.6665; --k: 1; --px: 0.85; --py: 0; }
+    .ring--m { display: block; }
+    .ring--d { display: none; }
+  }
+  @media (max-width: 767px) {
+    .row { font-size: 1rem; }
+  }
+  @media (max-width: 767px) and (max-height: 700px) {
+    .addr { display: none; }
+  }
+
+  @media (min-width: 768px) {
+    .shade {
+      background:
+        linear-gradient(to bottom, rgb(var(--c-scrim) / 0.55) 0, rgb(var(--c-scrim) / 0) 14%),
+        linear-gradient(to top, var(--c-bg) 0, rgb(var(--c-scrim) / 0.85) 20%, rgb(var(--c-scrim) / 0.4) 38%, rgb(var(--c-scrim) / 0) 56%);
+    }
+    .top-tel span { display: inline; }
+    /* вордмарк слева, бронь справа от него — обе в тёмной нижней зоне, ниже неонового знака на фото */
+    .copy { display: grid; grid-template-columns: auto minmax(0, 25rem); justify-content: space-between; align-items: end; gap: var(--s-8); padding-bottom: var(--s-6); }
+    .info { grid-column: 2; grid-row: 1; }
+    .mark { grid-column: 1; grid-row: 1; white-space: nowrap; }
+    .mark-b { padding-left: 0.12em; }
+  }
+  @media (min-width: 1024px) {
+    .nav { display: flex; margin-left: var(--s-4); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dusk { display: none; }
+    .ring .ring-line, .ring .ring-glow { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  }
+</style>

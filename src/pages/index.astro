@@ -1,0 +1,53 @@
+---
+/**
+ * Главная собирает секции. Порядок и назначение — SPEC.md «Решения», вид — DESIGN.md.
+ * id секций = .premiumsite/gate.config.json → requiredSelectors.
+ */
+import Base from '../layouts/Base.astro';
+import ContactBar from '../components/ContactBar.astro';
+import Reveal from '../components/Reveal.astro';
+import Hero from '../sections/Hero.astro';
+import Atmosphere from '../sections/Atmosphere.astro';
+import Offer from '../sections/Offer.astro';
+import Kitchen from '../sections/Kitchen.astro';
+import Ratings from '../sections/Ratings.astro';
+import Visit from '../sections/Visit.astro';
+import { business } from '../data/site';
+import { getImage } from 'astro:assets';
+import heroM from '../assets/photos/photo-vsemeda-07.jpg';
+import heroD from '../assets/photos/photo-vsemeda-03.jpg';
+
+// Те же параметры, что в Hero.astro, — тот же URL, браузер начинает грузить кадр до разбора CSS (LCP).
+const [pm, pd] = await Promise.all([
+  getImage({ src: heroM, widths: [480, 720, 960, 1333], format: 'avif' }),
+  getImage({ src: heroD, widths: [960, 1280, 1500], format: 'avif' }),
+]);
+---
+<Base>
+  <Fragment slot="head">
+    <link rel="preload" as="image" type="image/avif" media="(max-width: 767px)" imagesrcset={pm.srcSet.attribute} imagesizes="150vw" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/avif" media="(min-width: 768px)" imagesrcset={pd.srcSet.attribute} imagesizes="112vw" fetchpriority="high" />
+  </Fragment>
+  <main id="main">
+    <Hero />
+    <Atmosphere />
+    <Offer />
+    <Kitchen />
+    <Ratings />
+    <Visit />
+  </main>
+
+  <footer class="container-x site-footer">
+    <p>{business.name}, {business.address.city}, {business.address.street}</p>
+    {/* реквизиты оператора выводим, когда владелец их подтвердит (analysis.md → VERIFY) */}
+    {!business.legal.operator.includes('VERIFY') && <p>{business.legal.operator}</p>}
+    <p><a href={`${import.meta.env.BASE_URL}privacy`}>Политика конфиденциальности</a></p>
+  </footer>
+
+  <ContactBar />
+  <Reveal />
+</Base>
+
+<style>
+  .site-footer { padding-block: var(--s-12); color: var(--c-muted); font-size: var(--t-small); border-top: 1px solid var(--c-border); }
+</style>

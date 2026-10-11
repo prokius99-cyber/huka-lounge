@@ -1,0 +1,58 @@
+---
+import { Picture } from 'astro:assets';
+import dish1 from '../assets/photos/photo-vsemeda-01.jpg';
+import dish2 from '../assets/photos/photo-vsemeda-06.jpg';
+import dish3 from '../assets/photos/photo-vsemeda-09.jpg';
+
+const dishes = [
+  { src: dish1, alt: 'Крем-суп со сливочной текстурой, сухариками и тёртым сыром в бирюзовой пиале' },
+  { src: dish2, alt: 'Салат из свежих овощей с кубиками белого сыра, оливками и красным луком на бирюзовой тарелке' },
+  { src: dish3, alt: 'Салат с курицей, сухариками, помидорами черри и тёртым сыром на бирюзовой тарелке' },
+];
+---
+<section data-section="kitchen" id="kitchen" aria-labelledby="kitchen-title" class="section-y kitchen">
+  <div class="container-x">
+    <h2 id="kitchen-title" class="kitchen__title">Кухня</h2>
+    <div class="kitchen__grid" data-reveal>
+      {dishes.map((d, i) => (
+        <figure class={`kitchen__item kitchen__item--${i + 1}`}>
+          <Picture
+            src={d.src}
+            alt={d.alt}
+            formats={['avif', 'webp']}
+            widths={[390, 640, 960]}
+            sizes={i === 0 ? '(min-width: 768px) 33vw, 100vw' : '(min-width: 768px) 33vw, 50vw'}
+            loading="lazy"
+            class="kitchen__img"
+          />
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .kitchen { background: var(--c-surface); }
+  .kitchen__title { color: var(--c-text); }
+  .kitchen__text {
+    margin-top: var(--s-6);
+    max-width: var(--text-max);
+    color: var(--c-muted);
+  }
+  .kitchen__grid {
+    margin-top: var(--s-12);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gutter);
+  }
+  .kitchen__item { margin: 0; aspect-ratio: 1 / 1; overflow: hidden; }
+  .kitchen__item--1 { grid-column: 1 / -1; }
+  .kitchen__img, .kitchen__item :global(img) {
+    display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0;
+  }
+  @media (min-width: 768px) {
+    .kitchen__grid { grid-template-columns: repeat(3, 1fr); }
+    .kitchen__item--1 { grid-column: auto; }
+    .kitchen__item--2 { margin-top: var(--s-12); }
+  }
+</style>

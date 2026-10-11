@@ -1,0 +1,35 @@
+---
+/**
+ * Политика конфиденциальности. На сайте нет форм и счётчиков: бронь идёт в WhatsApp или по телефону.
+ * Реквизиты оператора — из site.ts; пока там {{VERIFY}} — это вопрос владельцу перед запуском.
+ * Не юридическая консультация: перед выкладкой на домен клиента текст проверяет владелец.
+ */
+import Base from '../layouts/Base.astro';
+import { business } from '../data/site';
+---
+<Base title={`Политика конфиденциальности — ${business.name}`} description={`Какие данные собирает сайт ${business.name}: форм и счётчиков на нём нет, бронь стола — в WhatsApp или по телефону.`}>
+  <main id="main" class="container-x section-y privacy">
+    <h1>Политика конфиденциальности</h1>
+
+    <h2>Кто отвечает за сайт</h2>
+    <p>Оператор: {business.legal.operator}, ИНН {business.legal.inn}{business.legal.ogrn && `, ОГРН ${business.legal.ogrn}`}. Адрес: {business.address.city}, {business.address.street}. Телефон: <a href={`tel:${business.phone.e164}`}>{business.phone.display}</a>.</p>
+
+    <h2>Что собирает сайт</h2>
+    <p>Ничего. На сайте нет форм, регистрации, счётчиков посещений и рекламных cookie.</p>
+
+    <h2>Бронь стола</h2>
+    <p>Кнопка «Забронировать стол» открывает WhatsApp, ссылки на Telegram и MAX открывают эти мессенджеры, ссылки «Позвонить» — звонок. Данные, которые вы там сообщаете, обрабатываются по правилам этих сервисов.</p>
+
+    <h2>Ваши права</h2>
+    <p>Чтобы узнать, какие ваши данные есть у заведения, исправить или удалить их, позвоните по телефону, указанному выше.</p>
+
+    <p><a href={import.meta.env.BASE_URL}>На главную</a></p>
+  </main>
+</Base>
+
+<style>
+  .privacy { max-width: 46rem; }
+  .privacy h1 { font-size: var(--t-h2); line-height: var(--t-h2-lh); margin-bottom: var(--s-4); }
+  .privacy h2 { font-size: var(--t-h3); margin: var(--s-8) 0 var(--s-2); }
+  .privacy a { color: var(--c-accent-text); }
+</style>

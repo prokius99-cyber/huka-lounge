@@ -1,0 +1,43 @@
+---
+/**
+ * Липкая панель на телефоне: «Забронировать» (WhatsApp) и «Позвонить» под большим пальцем.
+ * Появляется, когда кнопка брони первого экрана (#hero-cta) ушла из вида, — чтобы не дублировать её. Скрыта на ≥ 768px.
+ */
+import { business, bookingUrl } from '../data/site';
+---
+<nav class="contact-bar" aria-label="Связаться">
+  <a class="cb-book" href={bookingUrl} target="_blank" rel="noopener" aria-label="Забронировать стол в WhatsApp">Забронировать</a>
+  <a class="cb-call" href={`tel:${business.phone.e164}`} data-cta-call>
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.6a1 1 0 01-.25 1z"/></svg>
+    Позвонить
+  </a>
+</nav>
+<script>
+  const bar = document.querySelector<HTMLElement>('.contact-bar');
+  const cta = document.getElementById('hero-cta');
+  if (bar && cta && 'IntersectionObserver' in window) {
+    bar.classList.add('is-hidden');
+    new IntersectionObserver(([e]) => bar.classList.toggle('is-hidden', e.isIntersecting)).observe(cta);
+  }
+</script>
+<style>
+  .contact-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: flex; gap: var(--s-2);
+    padding: var(--s-2) var(--s-3) calc(var(--s-2) + env(safe-area-inset-bottom));
+    background: color-mix(in oklab, var(--c-bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--c-border);
+    transition: transform var(--d-state) var(--e-in-out);
+  }
+  .contact-bar.is-hidden { transform: translateY(110%); }
+  .contact-bar a {
+    flex: 1; min-height: var(--tap); display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+    border-radius: var(--r-md); font-weight: 500; text-decoration: none;
+  }
+  .cb-book { background: var(--c-accent); color: var(--c-on-accent); }
+  .cb-call { border: 1px solid var(--c-border); color: var(--c-text); background: var(--c-bg); }
+  @media (min-width: 768px) { .contact-bar { display: none; } }
+  :global(body) { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  @media (min-width: 768px) { :global(body) { padding-bottom: 0; } }
+</style>

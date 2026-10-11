@@ -1,0 +1,67 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Классы Tailwind, связанные с токенами: bg-bg, text-text, text-muted, bg-accent, rounded-lg … */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-border: var(--c-border);
+  --color-accent: var(--c-accent);
+  --color-accent-hover: var(--c-accent-hover);
+  --color-on-accent: var(--c-on-accent);
+  --color-accent-text: var(--c-accent-text);
+  --color-secondary: var(--c-secondary);
+  --color-danger: var(--c-danger);
+  --font-display: var(--f-display);
+  --font-body: var(--f-body);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+}
+
+@layer base {
+  html { color-scheme: dark; background: var(--c-bg); -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--f-body);
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--f-display); font-weight: 400; text-wrap: balance; margin: 0; }
+  h2 { font-size: var(--t-h2); line-height: var(--t-h2-lh); }
+  h3 { font-size: var(--t-h3); line-height: var(--t-h3-lh); }
+  p { text-wrap: pretty; overflow-wrap: anywhere; }
+  img, video, svg, canvas { display: block; max-width: 100%; }
+  img { height: auto; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--c-accent-text); outline-offset: 3px; border-radius: 4px; }
+  ::selection { background: var(--c-accent); color: var(--c-on-accent); }
+}
+
+@layer components {
+  .container-x { width: min(100% - 2 * var(--gutter), var(--content-max)); margin-inline: auto; }
+  .section-y { padding-block: var(--section-y); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .skip-link { position: absolute; left: var(--s-4); top: -100px; z-index: 100; padding: var(--s-3) var(--s-4); background: var(--c-text); color: var(--c-bg); border-radius: var(--r-sm); }
+  .skip-link:focus { top: var(--s-4); }
+  /* Появление по скроллу: один раз, без бесконечных анимаций. Скрипт — в Reveal.astro. */
+  [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity var(--d-enter) var(--e-out), transform var(--d-enter) var(--e-out); }
+  [data-reveal].is-in { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}

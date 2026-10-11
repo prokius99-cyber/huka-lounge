@@ -1,0 +1,79 @@
+/*
+ * Токены дизайн-системы «Хука Lounge». Значения — только из DESIGN.md (разделы 2, 3, 5, 6, С1, С2).
+ * В компонентах — только var(--…) или классы Tailwind, связанные с этими токенами в global.css.
+ * Литералы цветов, кеглей и отступов вне этого файла запрещены.
+ */
+:root {
+  /* цвет — роли (тёмная схема: тёплый потолок зала) */
+  --c-bg: #0d0a07;          /* фон: тёмный потолок зала, H 70° */
+  --c-surface: #1b1610;     /* поверхность: дерево в тени */
+  --c-surface-2: #241d15;   /* поверхность при наведении / нажатии */
+  --c-text: #f2e9d6;        /* текст: бежевая кожа, 16.36 к bg */
+  --c-muted: #b3a68f;       /* приглушённый: 8.24 к bg, 7.50 к surface */
+  --c-border: #3a3125;      /* волосяные линии */
+  --c-accent: #3a7a55;      /* brand · logo · H 156° — только действие (бронь) */
+  --c-accent-hover: #2f6a49;/* H 157°, белый на нём 6.40 */
+  --c-on-accent: #ffffff;   /* 5.13 к accent */
+  --c-accent-text: #5fa47a; /* H 156°, ссылки: 6.65 к bg, 6.06 к surface */
+  --c-secondary: #f0b46a;   /* янтарь — свет кольца и строка часов, больше нигде */
+  --c-danger: #f08a7a;      /* 8.11 к bg */
+
+  /* свет и затемнение */
+  --c-glow: rgb(240 180 106 / 0.55);  /* свечение кольца (blur-слой) */
+  --c-scrim: 13 10 7;                  /* rgb-тройка --c-bg для rgb(var(--c-scrim) / α) */
+  --dusk-alpha: 0.5;                   /* сумерки до зажигания: слой --c-scrim поверх фото, гаснет opacity 1→0 */
+
+  /* типографика */
+  --f-display: 'Yeseva One', Georgia, 'Times New Roman', serif;
+  --f-body: 'Jost Variable', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+  /* вордмарк «хука»: телефон — две строки, ≥ 768 — одна строка; svh держит низкие окна (P0) */
+  --t-hero: clamp(4rem, min(30vw, 17svh), 8rem);
+  --t-hero-lh: 0.82;
+  --t-hero-ls: -0.01em;
+  --t-hero-sub: clamp(1.25rem, 5.6vw, 1.5rem);   /* LOUNGE — Jost 500 капс */
+  --t-hero-sub-ls: 0.32em;
+
+  --t-h2: clamp(2.25rem, 1.4rem + 3.6vw, 4.5rem);
+  --t-h2-lh: 1;
+  --t-h3: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+  --t-h3-lh: 1.1;
+  --t-num: clamp(3rem, 2rem + 4vw, 5.5rem);      /* оценки 4,9 / 4,5 — Jost 300 */
+  --t-lead: clamp(1.125rem, 1rem + 0.4vw, 1.25rem);
+  --t-body: 1.0625rem;
+  --t-body-lh: 1.6;
+  --t-small: 0.9375rem;
+  --t-label-ls: 0.14em;    /* капс-метки (не надзаголовки) */
+
+  /* пространство: геометрическая шкала */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-6: 1.5rem;
+  --s-8: 2rem; --s-12: 3rem; --s-16: 4rem; --s-24: 6rem; --s-32: 8rem;
+  --section-y: clamp(var(--s-16), 10vw, var(--s-32));
+  --content-max: 78rem;
+  --text-max: 34rem;
+  --gutter: clamp(1.25rem, 3.5vw, 2.5rem);
+  --header-h: 4.5rem;
+
+  /* форма */
+  --r-sm: 4px; --r-md: 8px; --r-lg: 16px; --r-pill: 999px;
+  --tap: 48px;
+  --cta-h: 3.375rem;       /* 54px */
+  --hair: 1px;
+  --ring-w: 1.5px;         /* контур кольца вне первого экрана */
+
+  /* движение */
+  --e-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --e-draw: cubic-bezier(0.5, 0.1, 0.3, 1);
+  --d-micro: 160ms; --d-state: 260ms; --d-enter: 700ms;
+  --d-glow: 450ms;
+  --d-glow-delay: 350ms;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --t-hero: clamp(6rem, min(17.5vw, 30svh), 16.25rem);
+    --t-hero-sub: clamp(1.5rem, 2.4vw, 2.5rem);
+    --header-h: 5.5rem;
+  }
+}

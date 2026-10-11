@@ -1,0 +1,84 @@
+---
+/**
+ * Базовый макет: мета, Open Graph, canonical, JSON-LD, noindex для демо, ссылка «к содержанию».
+ * Шрифты — импорты ниже (самохостинг @fontsource, 3 woff2 + preload). <slot name="head" /> — для мета страниц.
+ */
+// Шрифты (DESIGN.md §3): ровно 3 woff2 — Yeseva One cyrillic (без unicode-range: пробелы тоже из него),
+// Jost cyrillic + latin (цифры, пунктуация, LOUNGE). ₽ и прочий latin-ext не набираем — иначе 4-й файл.
+import '@fontsource/yeseva-one/cyrillic-400.css';
+import '@fontsource-variable/jost/wght.css';
+import yesevaCyr from '@fontsource/yeseva-one/files/yeseva-one-cyrillic-400-normal.woff2?url';
+import jostCyr from '@fontsource-variable/jost/files/jost-cyrillic-wght-normal.woff2?url';
+import jostLat from '@fontsource-variable/jost/files/jost-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+import { business, isDemo } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+const {
+  title = `${business.name} — ${business.tagline}`,
+  description = business.description,
+  ogImage = `${import.meta.env.BASE_URL}og.jpg`,
+  noindex = isDemo,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const og = new URL(ogImage, Astro.site);
+
+const schemaHours = business.hours.length ? { openingHours: business.hours } : {};
+const sameAs = [business.links.vk, business.links.telegram && `https://t.me/${business.links.telegram}`, business.links.yandexMaps, business.links.twoGis].filter(Boolean);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': business.schemaType,
+  name: business.name,
+  description: business.description,
+  url: Astro.site?.href,
+  telephone: business.phone.e164,
+  ...(business.email ? { email: business.email } : {}),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: business.address.street,
+    addressLocality: business.address.city,
+    ...(business.address.region ? { addressRegion: business.address.region } : {}),
+    ...(business.address.postalCode ? { postalCode: business.address.postalCode } : {}),
+    addressCountry: 'RU',
+  },
+  ...(business.geo.lat ? { geo: { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lon } } : {}),
+  ...schemaHours,
+  ...(sameAs.length ? { sameAs } : {}),
+};
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+    <meta name="theme-color" content={business.themeColor} />
+    <meta name="color-scheme" content="dark" />
+    <link rel="preload" as="font" type="font/woff2" href={yesevaCyr} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jostCyr} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jostLat} crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={og} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К содержанию</a>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,111 @@
+---
+import { Picture } from 'astro:assets';
+import hall from '../assets/photos/photo-vsemeda-04.jpg';
+import windows from '../assets/photos/photo-vsemeda-05.jpg';
+import ringTall from '../assets/photos/photo-vsemeda-07.jpg';
+import ringWide from '../assets/photos/photo-vsemeda-03.jpg';
+
+const formats = ['avif', 'webp'] as const;
+---
+<section data-section="atmosphere" id="atmosphere" aria-labelledby="atmosphere-title" class="section-y">
+  <div class="container-x">
+    <h2 id="atmosphere-title">Зал</h2>
+
+    <figure class="frame frame--main">
+      <Picture
+        src={hall}
+        formats={[...formats]}
+        widths={[640, 1024, 1600]}
+        sizes="(min-width: 1280px) 78rem, 100vw"
+        alt="Зал Хука Lounge: изумрудные бархатные диваны вокруг деревянных столов, кольцевой светильник под чёрным потолком, стены с живой зеленью"
+        loading="lazy"
+      />
+      <figcaption class="credit">Фото: SVH</figcaption>
+    </figure>
+
+    <ul class="notes">
+      <li>Изумрудный бархат диванов</li>
+      <li>Кольцевые светильники над залом</li>
+      <li>Живая зелень и неоновый знак на стене</li>
+    </ul>
+
+    <div class="pair" data-reveal>
+      <figure class="frame frame--a">
+        <Picture
+          src={windows}
+          formats={[...formats]}
+          widths={[480, 768, 1024]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          alt="Зал: панорамные окна со шторами, живые растения и бархатные диваны за деревянными столами"
+          loading="lazy"
+        />
+        <figcaption class="credit">Фото: SVH</figcaption>
+      </figure>
+      <figure class="frame frame--b">
+        <Picture
+          class="only-wide"
+          src={ringTall}
+          formats={[...formats]}
+          widths={[480, 768, 1024]}
+          sizes="50vw"
+          alt="Зал: большой кольцевой светильник над диванами, стена с зеленью и неоновым знаком"
+          loading="lazy"
+        />
+        <Picture
+          class="only-narrow"
+          src={ringWide}
+          formats={[...formats]}
+          widths={[480, 768]}
+          sizes="100vw"
+          alt="Уголок зала: неоновый знак Хука Lounge между панелями живой зелени, круглый стол и бархатный диван под кольцевым светильником"
+          loading="lazy"
+        />
+        <figcaption class="credit">Фото: SVH</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  h2 { margin-bottom: var(--s-8); }
+
+  .frame { position: relative; margin: 0; overflow: hidden; background: var(--c-surface); }
+  .frame :global(img) {
+    width: 100%; height: 100%; object-fit: cover;
+    /* статичный кадр: водяной знак SVH в левом верхнем углу уходит за край */
+    transform: scale(1.15); transform-origin: 100% 100%;
+  }
+  .frame--main { aspect-ratio: 4 / 3; }
+  .frame--a { aspect-ratio: 3 / 2; }
+  .frame--b { aspect-ratio: 3 / 2; }
+
+  .credit {
+    position: absolute; right: var(--s-3); bottom: var(--s-3);
+    font-size: var(--t-small); line-height: 1; color: var(--c-muted);
+    padding: var(--s-3) var(--s-4);
+    background: radial-gradient(farthest-side, rgb(var(--c-scrim) / 0.92) 40%, rgb(var(--c-scrim) / 0));
+  }
+
+  .notes {
+    list-style: none; margin: var(--s-8) 0; padding: 0;
+    max-width: var(--text-max); color: var(--c-text); font-size: var(--t-lead); line-height: 1.35;
+  }
+  .notes li { padding-block: var(--s-4); border-top: 1px solid var(--c-border); }
+  .notes li:last-child { border-bottom: 1px solid var(--c-border); }
+
+  .pair { display: grid; gap: var(--s-6); }
+  .only-wide { display: none; }
+
+  @media (min-width: 768px) {
+    .frame--main { aspect-ratio: auto; height: 70svh; }
+    .notes { margin-block: var(--s-12); }
+    .pair { grid-template-columns: 1fr 1fr; gap: var(--gutter); align-items: start; }
+    .frame--a { aspect-ratio: 4 / 5; }
+    .frame--b { aspect-ratio: 4 / 5; margin-top: var(--s-16); }
+    .only-wide { display: block; }
+    .only-narrow { display: none; }
+  }
+  @media (min-width: 1024px) {
+    .notes { margin-left: auto; width: 50%; }
+  }
+</style>

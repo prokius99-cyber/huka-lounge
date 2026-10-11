@@ -1,0 +1,46 @@
+---
+import { business } from '../data/site';
+import { offer } from '../data/offer';
+
+const check = business.averageCheck.replace(/\s*₽/, ' рублей');
+---
+<section data-section="offer" id="offer" aria-labelledby="offer-title" class="section-y">
+  <div class="container-x">
+    <h2 id="offer-title">Что здесь есть</h2>
+    <ul class="offer-list">
+      {offer.map((item) => (
+        <li class="offer-row">
+          <h3>{item.title}</h3>
+          <div class="offer-body">
+            <p class="offer-text">{item.text}</p>
+            {item.note && <p class="offer-note">{item.note}</p>}
+          </div>
+        </li>
+      ))}
+      <li class="offer-row">
+        <h3>Средний чек</h3>
+        <p>
+          <span>{check}</span>
+          <a class="offer-link" href={business.links.menu} target="_blank" rel="noopener">Меню</a>
+        </p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .offer-list { list-style: none; margin: var(--s-12) 0 0; padding: 0; border-bottom: var(--hair) solid var(--c-border); }
+  .offer-row { border-top: var(--hair) solid var(--c-border); padding-block: var(--s-6); display: grid; gap: var(--s-2); }
+  .offer-row h3 { font-size: var(--t-h3); }
+  .offer-row p { margin: 0; color: var(--c-muted); font-size: var(--t-lead); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-8); }
+  .offer-row p span { color: var(--c-text); }
+  .offer-body { display: grid; gap: var(--s-2); }
+  .offer-row .offer-text { color: var(--c-text); }
+  .offer-row .offer-note { font-size: var(--t-body); line-height: var(--t-body-lh); }
+  .offer-link { color: var(--c-accent-text); display: inline-flex; align-items: center; min-height: var(--tap); text-decoration: underline; text-underline-offset: 0.25em; }
+  @media (min-width: 768px) {
+    .offer-row { grid-template-columns: repeat(12, 1fr); column-gap: var(--gutter); align-items: baseline; }
+    .offer-row h3 { grid-column: 1 / 6; }
+    .offer-row > p, .offer-body { grid-column: 7 / 13; }
+  }
+</style>

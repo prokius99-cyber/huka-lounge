@@ -1,0 +1,38 @@
+---
+import { business } from '../data/site';
+---
+<section data-section="ratings" id="ratings" aria-labelledby="ratings-title" class="section-y">
+  <div class="container-x">
+    <h2 id="ratings-title">Рейтинги</h2>
+    <ul class="rating-list">
+      {business.ratings.map((r) => (
+        <li class="rating-row">
+          <p class="rating-num" aria-label={`Оценка ${r.value}`}>{r.value}</p>
+          <div class="rating-body">
+            <h3>{r.source}</h3>
+            <p class="rating-meta">
+              {r.count}
+              {r.source === 'Яндекс Карты' && <span>Хорошее место 2026</span>}
+            </p>
+            <a class="rating-link" href={r.url} target="_blank" rel="noopener">Открыть карточку<span class="sr-only"> — {r.source}</span></a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .rating-list { list-style: none; margin: var(--s-12) 0 0; padding: 0; border-bottom: var(--hair) solid var(--c-border); }
+  .rating-row { border-top: var(--hair) solid var(--c-border); padding-block: var(--s-6); display: grid; grid-template-columns: auto 1fr; column-gap: var(--s-8); align-items: center; }
+  .rating-num { margin: 0; font-family: var(--f-body); font-weight: 300; font-size: var(--t-num); line-height: 1; color: var(--c-text); font-variant-numeric: lining-nums; }
+  .rating-body { display: grid; gap: var(--s-1); justify-items: start; }
+  .rating-body h3 { font-size: var(--t-h3); }
+  .rating-meta { margin: 0; color: var(--c-muted); display: flex; flex-wrap: wrap; gap: 0 var(--s-4); }
+  .rating-link { color: var(--c-accent-text); display: inline-flex; align-items: center; min-height: var(--tap); text-decoration: underline; text-underline-offset: 0.25em; }
+  @media (min-width: 768px) {
+    .rating-row { grid-template-columns: repeat(12, 1fr); column-gap: var(--gutter); }
+    .rating-num { grid-column: 1 / 6; }
+    .rating-body { grid-column: 7 / 13; }
+  }
+</style>

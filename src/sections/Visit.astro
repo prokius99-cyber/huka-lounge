@@ -1,0 +1,129 @@
+---
+import { business, bookingUrl } from '../data/site';
+
+const { address, phone, links } = business;
+// Номер помещения (51-Н) не публикуем: {{VERIFY: можно ли указывать номер помещения}}
+const tg = `https://t.me/${links.telegram}`;
+const wa = `https://wa.me/${links.whatsapp}`;
+---
+<section data-section="visit" id="visit" aria-labelledby="visit-title" class="section-y">
+  <div class="container-x visit">
+    <h2 id="visit-title" class="visit-title">Как найти</h2>
+
+    <div class="visit-ring" data-reveal>
+      <svg class="ring-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <circle class="ring-line" cx="50" cy="50" r="49" pathLength="1" />
+      </svg>
+      <p class="ring-text">
+        <span class="ring-hours">14:00–02:00</span>
+        <span class="ring-sub">ежедневно</span>
+      </p>
+    </div>
+
+    <div class="info">
+      <address class="addr">
+        <p class="addr-main">{address.street}</p>
+        <p class="addr-note">2&nbsp;этаж, ЖК «Золотая Гавань»</p>
+      </address>
+
+      <ul class="rows">
+        <li class="row">
+          <span class="row-label">Телефон</span>
+          <a class="tlink phone" href={`tel:${phone.e164}`}>{phone.display}</a>
+        </li>
+        <li class="row">
+          <span class="row-label">Написать</span>
+          <span class="chat">
+            <a class="tlink" href={wa} target="_blank" rel="noopener">WhatsApp</a>
+            <a class="tlink" href={tg} target="_blank" rel="noopener">Telegram</a>
+            <a class="tlink" href={links.max} target="_blank" rel="noopener">MAX</a>
+          </span>
+        </li>
+        <li class="row">
+          <span class="row-label">Маршрут</span>
+          <span class="chat">
+            <a class="tlink" href={links.yandexMaps} target="_blank" rel="noopener">Яндекс Карты<span class="sr-only"> — построить маршрут</span></a>
+            <a class="tlink" href={links.twoGis} target="_blank" rel="noopener">2ГИС<span class="sr-only"> — построить маршрут</span></a>
+          </span>
+        </li>
+      </ul>
+
+      <a class="cta" href={bookingUrl} target="_blank" rel="noopener" aria-label="Забронировать стол в WhatsApp">
+        <svg class="cta-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 0-8.4 15.1L2 22l5.05-1.6A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 0 1 0 16.2 8.1 8.1 0 0 1-4.2-1.17l-.3-.18-3 .95.98-2.9-.2-.31A8.1 8.1 0 0 1 12.04 3.8Zm-3.2 4.1c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15s.92 2.5 1.05 2.67c.13.17 1.8 2.86 4.43 3.9 2.19.86 2.63.69 3.1.65.48-.04 1.53-.63 1.75-1.23.21-.6.21-1.12.15-1.23-.06-.1-.24-.17-.5-.3-.27-.13-1.53-.76-1.77-.84-.24-.09-.4-.13-.58.13-.17.26-.67.84-.82 1.01-.15.17-.3.2-.56.07-.26-.13-1.1-.4-2.1-1.29-.77-.69-1.3-1.54-1.45-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.3.4-.45.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.07-.13-.58-1.4-.8-1.92-.2-.5-.42-.43-.58-.44h-.5Z"/>
+        </svg>
+        Забронировать стол
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .visit { display: grid; gap: var(--s-12); }
+  .visit-title { max-width: 22ch; }
+
+  /* кольцо часов (С1): один оборот = 12 рабочих часов */
+  .visit-ring { position: relative; width: 12rem; aspect-ratio: 1; justify-self: center; }
+  .ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+  .ring-line {
+    /* толщина в единицах viewBox (100): 0.65 ≈ 1.5px при 15rem; без non-scaling-stroke — иначе pathLength считает дугу в пикселях */
+    fill: none; stroke: var(--c-secondary); stroke-width: 0.65; stroke-linecap: butt; stroke-dasharray: 1.001; stroke-dashoffset: 0;
+  }
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .ring-line { stroke-dashoffset: 1; transition: stroke-dashoffset var(--d-enter) var(--e-draw); }
+    .visit-ring.is-in .ring-line { stroke-dashoffset: 0; }
+  }
+  .ring-text {
+    position: absolute; inset: 0; margin: 0; display: grid; place-content: center;
+    text-align: center; gap: var(--s-1);
+  }
+  .ring-hours {
+    font-family: var(--f-body); font-weight: 500; font-size: var(--t-h3); line-height: var(--t-h3-lh);
+    color: var(--c-secondary); font-variant-numeric: tabular-nums lining-nums; white-space: nowrap;
+  }
+  .ring-sub { font-size: var(--t-small); color: var(--c-muted); }
+
+  .info { display: grid; gap: var(--s-8); align-content: start; }
+  .addr { font-style: normal; display: grid; gap: var(--s-1); }
+  .addr p { margin: 0; }
+  .addr-main { font-size: var(--t-lead); line-height: 1.35; color: var(--c-text); }
+  .addr-note { font-size: var(--t-body); color: var(--c-muted); }
+
+  .rows { list-style: none; margin: 0; padding: 0; border-bottom: var(--hair) solid var(--c-border); }
+  .row {
+    border-top: var(--hair) solid var(--c-border); padding-block: var(--s-3);
+    display: grid; gap: var(--s-1); align-items: center;
+  }
+  .row-label { font-size: var(--t-small); color: var(--c-muted); }
+  .chat { display: flex; flex-wrap: wrap; column-gap: var(--s-6); }
+  .tlink {
+    display: inline-flex; align-items: center; min-height: var(--tap); min-width: var(--tap);
+    font-family: var(--f-body); font-weight: 500; color: var(--c-text);
+    text-decoration: underline; text-decoration-color: var(--c-border);
+    text-decoration-thickness: 1px; text-underline-offset: 4px;
+    transition: text-decoration-color var(--d-micro) var(--e-out);
+  }
+  .tlink:hover { text-decoration-color: var(--c-accent-text); }
+  .phone { font-variant-numeric: tabular-nums lining-nums; }
+
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+    width: 100%; height: var(--cta-h); padding: 0 var(--s-6); border-radius: var(--r-pill);
+    background: var(--c-accent); color: var(--c-on-accent);
+    font-family: var(--f-body); font-weight: 500; font-size: 1.125rem; text-decoration: none;
+    transition: background-color var(--d-micro) var(--e-out), transform var(--d-micro) var(--e-out);
+  }
+  .cta:hover { background: var(--c-accent-hover); }
+  .cta:active { transform: scale(0.98); }
+  .cta:focus-visible, .tlink:focus-visible { outline: 2px solid var(--c-accent-text); outline-offset: 3px; }
+  .cta-icon { flex: none; }
+
+  @media (min-width: 768px) {
+    .visit { grid-template-columns: repeat(12, 1fr); column-gap: var(--gutter); row-gap: var(--s-12); align-items: center; }
+    .visit-title { grid-column: 1 / -1; }
+    .visit-ring { grid-column: 1 / 6; width: 17rem; justify-self: start; }
+    .info { grid-column: 7 / 13; }
+    .row { grid-template-columns: 8rem 1fr; column-gap: var(--s-4); }
+    .cta { width: 100%; }
+  }
+</style>
